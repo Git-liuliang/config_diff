@@ -1,0 +1,40 @@
+ <!DOCTYPE html>
+<html>
+<head>
+</head>
+    <style>
+        #msg{
+            width:400px; height:400px; overflow:auto; border:2px solid #000000;color:#ffffff;
+    }
+    </style>
+</head>
+<body>
+    <p>实时日志</p>
+    <div id="msg"></div>
+    <script src="http://libs.baidu.com/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        /* !window.WebSocket、window.MozWebSocket检测浏览器对websocket的支持*/
+        if (!window.WebSocket) {
+            if (window.MozWebSocket) {
+                window.WebSocket = window.MozWebSocket;
+            } else {
+                $('#msg').prepend("<p>你的浏览器不支持websocket</p>");
+            }
+        }
+        /* ws = new WebSocket 创建WebSocket的实例  注意设置对以下的websocket的地址哦*/
+        ws = new WebSocket('ws://172.18.3.181/log/');
+        /*
+            ws.onopen  握手完成并创建TCP/IP通道，当浏览器和WebSocketServer连接成功后，会触发onopen消息
+            ws.onmessage 接收到WebSocketServer发送过来的数据时，就会触发onmessage消息，参数evt中包含server传输过来的数据;
+        */
+        ws.onopen = function(evt) {
+            $('#msg').append('<li>websocket连接成功</li>');
+        }
+        ws.onmessage = function(evt) {
+            $('#msg').prepend('<li>' + evt.data + '</li>');
+        }
+    });
+</script>
+</body>
+</html>

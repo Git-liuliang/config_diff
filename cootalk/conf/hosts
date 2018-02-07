@@ -1,0 +1,4 @@
+[cootalk]
+172.18.3.189 ansible_connection=ssh ansible_ssh_user=configer ansible_ssh_pass=xinwei
+172.18.3.180 ansible_connection=ssh ansible_ssh_user=configer ansible_ssh_pass=xinwei
+172.18.3.182 ansible_connection=ssh ansible_ssh_user=configer ansible_ssh_pass=xinwei

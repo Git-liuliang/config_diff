@@ -1,0 +1,56 @@
+#! /usr/bin/python
+
+import difflib,hmac,os,sys
+
+
+
+def Diff_file_content(first,second):
+
+    try:
+        with open(first,'rb') as f: first_content = f.read()
+        with open(second,'rb')as f: second_content = f.read()
+
+        first_lines = [i for i in first_content.splitlines() if not i == '']
+        second_lines = [i for i in second_content.splitlines() if not i == '']
+        d = difflib.Differ()
+        different = d.compare(first_lines, second_lines)
+        for i in different:
+             if i.startswith('+') or i.startswith('-') or i.startswith('?'):
+                  print 'error>>>%s' % i.strip('\n')
+    except IOError,Argument:
+        print 'error>>>\n',Argument
+
+
+
+
+
+def  file_list(res_list,pathname):
+    # VisitDir is  os.path.walk need a callbalk function, must three args
+    def VisitDir(arg, dirname, names):
+        for filespath in names:
+                res = os.path.join(dirname, filespath)
+                if os.path.isfile(res)  and  'config_diff.py' not in res and '.git' not in res and '.idea' not in res:
+                    res_list.append(res)
+    os.path.walk(pathname,VisitDir,())
+    return res_list
+
+
+def core(first_dir,second_dir):
+
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    first_filename_list = []
+    path_name = os.path.join(BASE_DIR,first_dir)
+    file_list(first_filename_list,path_name)
+
+    for index, first_filename in enumerate(first_filename_list):
+
+        second_filename = first_filename.replace(first_dir,second_dir)
+        print 'file_%s %s comparing ....>>>> '%(index,second_filename)
+        Diff_file_content(first_filename,second_filename)
+        
+    
+if __name__ == '__main__':
+
+
+    ##example : first_dir: 172.18.3.189  second_dir: 172.18.3.180	
+    core(first_dir,second_dir)

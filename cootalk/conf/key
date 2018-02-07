@@ -1,0 +1,56 @@
+---
+- hosts: all
+  gather_facts: False
+  remote_user: configer
+  tasks:
+    - name: cootalk-gateway
+      fetch: src=/usr/local/tomcat/webapps/CooTalk-GateWay/WEB-INF/classes/config/{{item}} dest={{dir}}
+      with_items:
+        - camtalk-conf.properties
+        - db.properties
+        - hessian-conf.properties
+    
+
+    - name: cootalk-moments
+      fetch: src=/usr/local/tomcat/webapps/CooTalk_Moments/WEB-INF/classes/config/{{item}} dest={{dir}}
+      with_items:
+        - notify-conf.properties
+        - db.properties
+        - hessian-conf.properties
+
+    - name: cootalk-service
+      fetch: src=/usr/local/tomcat/webapps/CooTalk_Service/WEB-INF/classes/config/{{item}} dest={{dir}}
+      with_items:
+        - cootalk-conf.properties
+        - db.properties
+        - hessian-conf.properties
+
+    - name: file-server
+      fetch: src=/usr/local/tomcat/webapps/file_server/WEB-INF/classes/config/{{item}} dest={{dir}}
+      with_items:
+        - fdfs_client.conf
+        - db.properties
+        - hessian-conf.properties
+        - fileSystem-conf.properties
+
+    - name: r
+      fetch: src=/usr/local/tomcat/webapps/r/WEB-INF/classes/config/{{item}} dest={{dir}}
+      with_items:
+        - userInvite-conf.properties
+        - register-conf.properties
+        - hessian-conf.properties
+        - db.properties
+
+    - name: Ucenter
+      fetch: src=/usr/local/tomcat/webapps/Ucenter/WEB-INF/classes/config/{{item}} dest={{dir}}
+      with_items:
+        - cootalk-conf.properties
+        - db.properties
+        - hessian-conf.properties
+
+    - name: wifi_share
+      fetch: src=/usr/local/tomcat/webapps/wifi_share/WEB-INF/classes/config/{{item}} dest={{dir}}
+      with_items:
+        - password.properties
+        - db.properties
+        - hessian-conf.properties

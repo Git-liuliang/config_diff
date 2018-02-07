@@ -1,0 +1,94 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+import os
+from django.shortcuts import render,HttpResponse
+from cootalk import models
+from cootalk.src import fetch_config,config_diff,gitpull,clearold
+from cootalk.src import Myexception
+import time
+import json
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+repo_path = os.path.join(BASE_DIR,'outfile','base')
+# Create your views here.
+
+
+
+
+import logging
+from cootalk.conf import mylogging
+logger = logging.getLogger(__name__)
+mylogging.load_my_logging_cfg()
+
+
+
+
+def index(request):
+	
+
+
+	#item = {'ip_addr':'172.18.3.180','ssh_port':22,'app':'cootalk','country':'柬埔寨','is_config':False}
+	#models.Inventory.objects.create(**item)
+	
+	
+	res = models.Inventory.objects.all()
+	return render(request,'index.html',{"res":res})
+
+
+def action(request):
+
+	#clearold.run()
+	#gitpull.run()
+
+
+	if request.method == "POST":
+		clearold.run()
+        	#gitpull.run()
+		res = request.POST.values()
+		print(res)
+		log_dir = os.path.join(BASE_DIR,'cootalk','log','all2.log')
+		with open(log_dir,'r') as f:
+			f.seek(0,2)
+			try:
+				gitpull.run()
+
+				ip_list = models.Inventory.objects.filter(nid__in=res).values_list("ip_addr",flat=True)
+ 				print(ip_list)
+        			config_dir = os.path.join(BASE_DIR,'cootalk','conf','hosts')
+        			with open(config_dir, 'a') as w:
+                			w.write("[cootalk]"+"\n")
+        			for ip in ip_list:
+                			with open(config_dir,'a') as w:
+                        			w.write(ip+' ansible_connection=ssh ansible_ssh_user=configer ansible_ssh_pass=xinwei'+'\n')
+        			fetch_config.core()
+				#if True:
+				#	raise(Myexception.NofileException(1))
+        			for ip in ip_list:
+					local_dir = os.path.join('remote_file',ip)
+
+                			config_diff.core(local_dir)
+
+                                #res = f.readlines()
+                                #status = 0
+                                #result = res
+                                #return HttpResponse(json.dumps({"status": status, "result": result}))
+			except Exception,Argument:
+                                print 'error>>>%s\n'%Argument
+				logger.error('error>>>%s\n' % Argument)
+				
+                	finally:
+				res = f.readlines()
+				status = 0
+				result = res
+				return HttpResponse(json.dumps({"status": status, "result": result}))
+
+
+
+
+
+def show(request):
+	return render(request,"show.html")
+
+def log(request):
+	while True:
+        	msg = request.receive()  # 接客户端的消息
+    		print msg

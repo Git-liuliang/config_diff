@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+      <link rel="stylesheet" href="/static/plugins/bootstrap/css/bootstrap.css">
+       <link rel="stylesheet" href="/static/css/loading.css">
+</head>
+<body>
+
+<div>
+<form method="get" action="/action/" class="listform">
+<table class="table table-striped">
+    <thead>
+    <th>ip_addr</th>
+    <th>config_dir</th>
+    <th>ssh_port</th>
+    <th>app</th>
+    <th>country</th>
+    <th>is_config</th>
+    <th>action</th>
+    </thead>
+
+    {% for item in res %}
+        <tr>
+    <td>{{ item.ip_addr }}</td>
+    <td>{{ item.config_dir }}</td>
+        <td>{{ item.ssh_port }}</td>
+        <td>{{ item.app }}</td>
+        <td>{{ item.country }}</td>
+        <td>{{ item.is_config }}</td>
+	{% if item.ip_addr == '172.18.3.189'%}
+	<td><input type="checkbox" class="key" name="id_{{ item.nid }}" id={{ item.nid }} value={{ item.nid }} checked></td>
+        
+	{% else %}
+	<td><input type="checkbox" class="key"  name="id_{{ item.nid }}" id={{ item.nid }} value={{ item.nid }}></td>
+	{% endif %}
+        </tr>
+{% endfor %}
+</table>
+
+
+<input type="button" value="subimit" class="ajaxlog btn btn-primary">
+
+
+
+ 
+
+
+</form>
+
+</div>
+
+
+
+<div class="showlog">
+    <div class="spinner">
+  <div class="rect1"></div>
+  <div class="rect2"></div>
+  <div class="rect3"></div>
+  <div class="rect4"></div>
+  <div class="rect5"></div>
+</div>
+
+
+<script src="/static/js/jquery-3.2.1.js"></script>
+<script src="/static/js/fetch_log.js"></script>
+
+</body>
+</html>
